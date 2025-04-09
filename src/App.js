@@ -3,24 +3,19 @@ import { useState } from 'react';
 
 function App() {
 
-  
+  const [cep, setCep] = useState()
   const [endereco,setEndereco] = useState({})
+  console.log(cep)
+  console.log(endereco)
   
-function manipularEndereco(evento){
-
-  const cep = evento.target.value
- 
-  setEndereco({
-    cep
-  })
-
+function manipularEndereco(){
   if(cep && cep.length ===8){
     //obter o endereco
     fetch(`https://viacep.com.br/ws/${cep}/json/`)
       .then(resposta => resposta.json())
       .then(dados =>{
         setEndereco({
-          cep: cep,
+          cep: dados.cep,
           rua: dados.logradouro,
           bairro: dados.bairro,
           cidade: dados.localidade,
@@ -35,16 +30,18 @@ function manipularEndereco(evento){
     <div className="App">
       <header className="App-header">
       <h1>Buscador de endereços</h1>
-      <input type='number' onChange={manipularEndereco} placeholder='Digite seu cep'/>
-      <ul>
-
-        <li>Cep: {endereco.cep}</li>
-        <li>Rua: {endereco.rua}</li>
-        <li>Bairro: {endereco.bairro}</li>
-        <li>Cidade: {endereco.cidade}</li>
-        <li>Estado: {endereco.estado}</li>
+      <input type='number' value={cep} onChange={(e)=>setCep(e.target.value)} placeholder='Digite seu cep'/>
+      <button onClick={manipularEndereco}>Buscar</button>
       
-      </ul>
+        {endereco.cep && (<ul> 
+
+          <li>Cep: {endereco.cep}</li>
+          <li>Rua: {endereco.rua}</li>
+          <li>Bairro: {endereco.bairro}</li>
+          <li>Cidade: {endereco.cidade}</li>
+          <li>Estado: {endereco.estado}</li>
+        
+        </ul>)}
       </header>
     </div>
   );
